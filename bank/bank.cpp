@@ -49,14 +49,14 @@ private:
 class Savingaccount : public Bankaccount
 {
 private:
-    double intrestRate = 4;
+    double intrestRate = 5;
 
 public:
     void calculateIntrest()
     {
         double intrest;
         intrest = this->balance * this->intrestRate * 1 / 100;
-        cout << "So your current interst amount is :- " << intrest << endl;
+        cout << " Your current interst amount is :- " << intrest << endl;
     }
 };
 class Checkingaccount : public Bankaccount
@@ -114,19 +114,19 @@ public:
         for (int i = 1; i <= term; i++)
         {
             int compund;
-            compund = c_amount * 1 * 1 / 100;
+            compund = c_amount * 2.5 * 1 / 100;
             c_amount = c_amount + compund;
         }
-        cout << "Your fd after your " << this->term << " month term is :- " << c_amount << endl;
+        cout << " Your fd after your " << this->term << " month term is :- " << c_amount << endl;
     }
     void simple(int term, double num1)
     {
         double s_amount, simply;
         s_amount = num1;
         this->term = term;
-        simply = s_amount * 1 * term / 100;
+        simply = s_amount * 2.5 * term / 100;
         s_amount = s_amount + simply;
-        cout << "your fd after your " << this->term << " month term is :- " << s_amount << endl;
+        cout << " Your fd after your " << this->term << " month term is :- " << s_amount << endl;
     }
     void calculateIntrest(int term, double num1)
     {
@@ -174,7 +174,7 @@ int main()
             cout << "Enter account number: ";
             cin >> accountNum;
             s1.get(name, accountNum);
-            cout <<"Congratulations! Your saving account has been created successfully." << endl;
+            cout <<" Congratulations ! Your saving account has been created successfully." << endl;
             int choice;
             do
             {
@@ -291,7 +291,7 @@ int main()
         int choice1;
             do
             {
-                cout << "----Checking_account----" << endl;
+                cout << "----Current Account Menu----" << endl;
                 cout << "1. Deposit" << endl;
                 cout << "2. Withdraw" << endl;
                 cout << "3. Check Balance" << endl;
@@ -399,7 +399,7 @@ int main()
         int choice2;
             do
             {
-                cout << "----fixed-diposite_account----" << endl;
+                cout << "----Fixed Deposit Account Menu----" << endl;
                      cout << "1. Deposit" << endl;
                      cout << "2. Withdraw" << endl;
                      cout << "3. Check Balance" << endl;
@@ -488,8 +488,8 @@ int main()
                     cout << "----FD----" << endl;
                     cout << "Welcome to fixed-diposite department..." << endl;
                     cout << "Note :- if your fd term is less than or equal 6 month then the interst rate are calculate on simple intrest-rate if your fd is above 6 month then the intrest rate are calculate on compunding intrest-rate...." << endl;
-                    cout << "Note :- we are calucate interst per month and our intrest-rate are 1(%) per month" << endl;
-                    cout << "Deposite Your Principle Amount for FD :- ";
+                    cout << "Note :- we are calucate interst per month and our intrest-rate are 2.5(%) per month" << endl;
+                    cout << "Deposite Your Amount for FD :- ";
                     cin >> u;
                     cout << endl;
                     cout << "Enter your term(in month) here :- ";
