@@ -1,348 +1,522 @@
 #include <iostream>
 using namespace std;
 
-class BankAccount
+class Bankaccount
 {
 private:
+    string accountNumber;
     string accountHolderName;
-    int accountNumber;
-
-public:
-    double balance;
-    BankAccount(string name, int accNum, double initialBalance)
+    
+    public:
+    
+    double balance = 0;
+    void get(string name, string accNum)
     {
         accountHolderName = name;
         accountNumber = accNum;
-        balance = 0;
+        
     }
-
-    void deposit(double amount)
+    void deposite(double amount)
     {
-        if (amount > 0)
-        {
-            balance += amount;
-            cout << "Deposited $" << amount << ". New balance: $" << balance << endl;
-        }
-        else
-        {
-            cout << "Invalid deposit amount!" << endl;
-        }
+        this->balance = this->balance + amount;
     }
 
     void withdraw(double amount)
     {
-        if (amount > 0 && amount <= balance)
+        if (this->balance >= amount)
         {
-            balance -= amount;
-            cout << "Withdrew $" << amount << ". New balance: $" << balance << endl;
+            this->balance = this->balance - amount;
+            cout << "Collect your cash..." << endl;
         }
         else
         {
-            cout << "Invalid withdrawal amount or insufficient funds!" << endl;
+            cout << "Insufficient Balance..." << endl;
         }
-    }
-
-    void checkBalance()
-    {
-        cout << "Current balance: $" << balance << endl;
     }
 
     void displayAccountInfo()
     {
-        cout << "Account Holder: " << accountHolderName << endl;
-        cout << "Account Number: " << accountNumber << endl;
-        cout << "Balance: $" << balance << endl;
+        cout << "account number = " << this->accountNumber << endl
+             << "account holder name = " << this->accountHolderName << endl
+             << "balance = " << this->balance << endl;
     }
 
-   
-
- 
-    
-};
-class SavingAccount : public BankAccount
-{
-    public :
-     void interestRate(double balance)
+    void getBalance()
     {
-        double interestRate;
-        interestRate = balance * 4 * 1 / 100;
-        cout << "you interest is " << interestRate << endl;
-    }
-}
-// class CurrentAccount : public BankAccount
-// {
-//     public:
-//     double newoverdarftLimit;
-//      void overdraftLimit(double amount)
-//     {
-//          if (amount > 0 && amount <= balance)
-//         {
-//             balance -= amount;
-//             cout << "Withdrew $" << amount << ". New balance: $" << balance << endl;
-//         }
-//         else
-//         {
-//             cout << "Invalid withdrawal amount or insufficient funds!" << endl;
-//         }
-//         double overdraftLimit1;
-//         double overdraftLimit=1000;
-//         overdraftLimit1 = balance + overdraftLimit;
-//         newoverdarftLimit=overdraftLimit1-amount;
-//         if (newoverdarftLimit <= 0){
-//             cout << "overdraft limit is reached." << endl;
-//         }else{
-//             cout << "your overdraft limit is " << newoverdarftLimit<< endl;
-//         }
-//     }
-
-
-//     void checkBalance()
-//     {
-//         cout << "Current balance: $" << newoverdarftLimit << endl;
-//         cout <<"megi"<<endl;
-//     }
-// };
-class CheckingAccount : public BankAccount
-{
-    public:
-    double overdraftLimit;
-    CheckingAccount() {
-        overdraftLimit = 10000; // Always set it here
-    }
-    double withdraw(double amount) {
-        if ((balance - amount) < -overdraftLimit) {
-            cout << "Transaction failed! Withdrawal exceeds overdraft limit." << endl;
-        } else {
-            balance -= amount;
-            cout << "Withdrawal successful. New balance: " << balance << endl;
-        }
-        return balance;
-    }
-
-    // check overdraft
-    void checkOverdraft() {
-        if (balance < 0) {
-            cout << "You are in overdraft. Overdraft used: " << -balance << endl;
-            cout << "Remaining overdraft limit: " << overdraftLimit + balance << endl;
-        } else {
-            cout << "No overdraft. Your current balance is: " << balance << endl;
-        }
+        cout << "Your account balance is " << this->balance << endl;
     }
 };
-class FixedDepositAccount : public BankAccount
+class Savingaccount : public Bankaccount
 {
-    public:
-    double term, interestRate, money;
-    double calculateInterest() {
-        cout << "Enter amount for calaculate interest on fixeddeposit account.";
-        cin >> money;
-        cout << "Enter term (years): ";
-        cin >> term;
-        cout << "Enter interest rate (%): ";
-        cin >> interestRate;
+private:
+    double intrestRate = 4;
 
-        double now_balance = money;
+public:
+    void calculateIntrest()
+    {
+        double intrest;
+        intrest = this->balance * this->intrestRate * 1 / 100;
+        cout << "So your current interst amount is :- " << intrest << endl;
+    }
+};
+class Checkingaccount : public Bankaccount
+{
+public:
+    double overDraftLimit = 10000;
 
-        for (int i = 0; i < term; ++i)
+public:
+    void withDraw(double num1)
+    {
+        double amount;
+        amount = num1;
+        if (this->balance + this->overDraftLimit >= amount)
         {
-            double yearlyInterest = (now_balance * interestRate) / 100;
-            now_balance += yearlyInterest;
+            this->balance = this->balance - amount;
         }
+        else
+        {
+            cout << "you withdrow exceed your overdraftlimit...." << endl;
+        }
+    }
+    void deposite(double amount)
+    {
+        this->balance = this->balance + amount;
+        if(this->balance >= 0){
+            overDraftLimit = 10000;
+        }
+    }
 
-        double totalInterest = now_balance - money;
-
-        cout << "Final amount in " << term << " years: " << now_balance << endl;
-        return totalInterest;
+    void checkOverDarft()
+    {
+        if (balance < 0 && balance > -10000)
+        {
+            this->overDraftLimit = overDraftLimit + balance;
+            cout << "you have " << this->overDraftLimit << " overDraftLimit left..." << endl;
+            overDraftLimit = 10000;
+        }
+        else
+        {
+            cout << "You have " << this->overDraftLimit << " overdraftlimit left..." << endl;
+        }
     }
 };
-int main()
-{ CheckingAccount c2;
-    SavingAccount s1;
-    CurrentAccount c1;
-    FixedDepositAccount f1;
-    string name;
-    int accountNum;
-    double initialBalance;
-    double amount=0;
-    cout << "------ welcome to our invisible bank ------" << endl;
-    cout << "Enter Account Holder Name: ";
-    cin >> name;
-    cout << "Enter Account Number: ";
-    cin >> accountNum;
-    // cout << "Enter Initial Balance: $";
-    // cin >> initialBalance;
+class Fixeddipositeaccount : public Savingaccount
+{
+private:
+    int term;
 
-    BankAccount account(name, accountNum, initialBalance);
+public:
+    void compuding(int term, double num1)
+    {
+        double c_amount;
+        c_amount = num1;
+        this->term = term;
+        for (int i = 1; i <= term; i++)
+        {
+            int compund;
+            compund = c_amount * 1 * 1 / 100;
+            c_amount = c_amount + compund;
+        }
+        cout << "Your fd after your " << this->term << " month term is :- " << c_amount << endl;
+    }
+    void simple(int term, double num1)
+    {
+        double s_amount, simply;
+        s_amount = num1;
+        this->term = term;
+        simply = s_amount * 1 * term / 100;
+        s_amount = s_amount + simply;
+        cout << "your fd after your " << this->term << " month term is :- " << s_amount << endl;
+    }
+    void calculateIntrest(int term, double num1)
+    {
+        double t_amount;
+        t_amount = num1;
+        this->term = term;
+        if (term > 6)
+        {
+            compuding(term, t_amount);
+        }
+        else
+        {
+            simple(term, t_amount);
+        }
+    }
+};
+
+int main()
+{
+    Savingaccount s1;
+    Checkingaccount c1;
+    Fixeddipositeaccount f1;
 
     int type;
+    string me;
+    string name;
+    string accountNum;
+    
     do
     {
-        cout << "------ Account Type ------" << endl;
-        cout << "1. Saving Account" << endl;
-        cout << "2. Current Account" << endl;
-        cout << "3. Fixed Deposit Account" << endl;
+        cout << endl<<"------ welcome to our invisible bank ------" << endl<<endl;
+        cout << "------ Select Account Type ------" << endl<<endl;
+        cout << "1. Creat Saving Account " << endl;
+        cout << "2. Creat Current Account" << endl;
+        cout << "3. Creat Fixed Deposit Account" << endl;
         cout << "0. Exit" << endl;
         cout << "Enter your choice: ";
         cin >> type;
         switch (type)
         {
-        case 1:
+            case 1:
             cout << "You have selected Saving Account." << endl;
+            cout << "Enter account holder name: ";
+            cin >> name;
+            cout << "Enter account number: ";
+            cin >> accountNum;
+            s1.get(name, accountNum);
+            cout <<"Congratulations! Your saving account has been created successfully." << endl;
             int choice;
             do
             {
-                cout << "------ Bank Menu ------" << endl;
+                cout << "------ Saving Account Menu ------" << endl;
                 cout << "1. Deposit" << endl;
                 cout << "2. Withdraw" << endl;
                 cout << "3. Check Balance" << endl;
                 cout << "4. Account Information" << endl;
-                cout << "5. Interest Rate" << endl;
+                cout << "5. your Interest amount" << endl;
                 cout << "0. Exit" << endl;
                 cout << "Enter your choice: ";
                 cin >> choice;
-
-                double amount;
+                
                 switch (choice)
                 {
-                case 1:
-                    cout << "Enter deposit amount: ";
-                    cin >> amount;
-                    account.deposit(amount);
+                    case 1:
+                    double money;
+                    cout << "----Deposite----" << endl
+                         << endl;
+                    cout << "Deposite Your Money :- ";
+                    cin >> money;
+                    if (money > 0)
+                    {
+                        s1.deposite(money);
+                        cout << "Money diposite successfully..." << endl
+                             << endl;
+                        cout << "Would you like cheak your balance press y/n :- ";
+                        cin >> me;
+                        cout << endl;
+                        if (me == "y")
+                        {
+                            s1.getBalance();
+                        }
+                        else if (me == "n")
+                        {
+                            cout << "Thank you for banking with us..." << endl;
+                        }
+                        else
+                        {
+                            cout << "press only y/n..." << endl;
+                        }
+                    }
+                    else
+                    {
+                        cout << "can't enter minus value" << endl;
+                    }
                     break;
-
-                case 2:
-                    cout << "Enter withdrawal amount: ";
-                    cin >> amount;
-                    account.withdraw(amount);
+                    case 2:
+                        double withMoney;
+                        cout << "----withdrow----" << endl
+                             << endl;
+                        cout << "Enter amount to withdraw :- ";
+                        cin >> withMoney;
+                        cout << endl;
+                        if (withMoney > 0)
+                        {
+                            s1.withdraw(withMoney);
+                            cout << "Would you like cheak your balance press y/n :- ";
+                            cin >> me;
+                            if (me == "y")
+                            {
+                                s1.getBalance();
+                            }
+                            else if (me == "n")
+                            {
+                                cout << "Thank you for banking with us..." << endl;
+                            }
+                            else
+                            {
+                                cout << "press only y/n..." << endl;
+                            }
+                        }
+                        break;
+                    case 3:
+                    cout << "----your balance----" << endl
+                    << endl;
+                    s1.getBalance();
+                    cout << "Thank you..." << endl
+                    << endl;
                     break;
-
-                case 3:
-                    s1.checkBalance();
-                    break;
-
-                case 4:
-                    s1.displayAccountInfo();
-                    break;
-
+                    case 4:
+                        cout << "----account detail----" << endl
+                             << endl;
+                        s1.displayAccountInfo();
+                        cout << "Thank you..." << endl
+                             << endl;
+                        break;
                 case 5:
-                    cout << "your blance is  " << amount << "  and your interestrate is 4% ,for 1 year. " << endl;
-                    account.interestRate(amount);
+                   cout << "----intrestrate_amount----" << endl
+                         << endl;
+                    s1.calculateIntrest();
+                    cout << "Note :- This intrestrate amount is for 1 year period..." << endl;
+                    cout << "Thank you...." << endl;
                     break;
                 case 0:
-                    cout << "Exiting the Saving Account system." << endl;
+                    cout << "Enter valid choice...." << endl;
                     break;
-
                 default:
-                    cout << "Invalid choice! Please try again." << endl;
+                    cout << "Enter valid chice..." << endl
+                         << endl;
+                    break;
                 }
             } while (choice != 0);
+
             break;
         case 2:
-            cout << "You have selected Current Account." << endl;
-            int choice1;
+        cout << "You have selected Current Account." << endl;
+        cout << "Enter account holder name: ";
+        cin >> name;
+        cout << "Enter account number: ";
+        cin >> accountNum;
+        c1.get(name, accountNum);
+        cout <<"Congratulations! Your Current account has been created successfully." << endl;
+        int choice1;
             do
             {
-                cout << "------ Bank Menu ------" << endl;
+                cout << "----Checking_account----" << endl;
                 cout << "1. Deposit" << endl;
                 cout << "2. Withdraw" << endl;
                 cout << "3. Check Balance" << endl;
                 cout << "4. Account Information" << endl;
+                cout << "5. your overdraft limit" << endl;
                 cout << "0. Exit" << endl;
                 cout << "Enter your choice: ";
                 cin >> choice1;
 
-                double amount;
                 switch (choice1)
                 {
-                case 1:
-                    cout << "Enter deposit amount: ";
-                    cin >> amount;
-                    account.deposit(amount);
+                    case 1:
+                        double money3;
+                        cout << "----Deposite----" << endl
+                             << endl;
+                        cout << "Deposite Your Money :- ";
+                        cin >> money3;
+                        if (money3 > 0)
+                        {
+                            c1.deposite(money3);
+                            cout << "Money diposite successfully..." << endl
+                                 << endl;
+                            cout << "Would you like cheak your balance press y/n :- ";
+                            cin >> me;
+                            cout << endl;
+                            if (me == "y")
+                            {
+                                c1.getBalance();
+                            }
+                            else if (me == "n")
+                            {
+                                cout << "Thank you for banking with us..." << endl;
+                            }
+                            else
+                            {
+                                cout << "press only y/n..." << endl;
+                            }
+                        }
+                        else
+                        {
+                            cout << "can't enter minus value" << endl;
+                        }
+                        break;
+                    case 2:
+                        double withMoney3;
+                        cout << "----withdrow----" << endl
+                             << endl;
+                        cout << "Enter amount to withdraw :- ";
+                        cin >> withMoney3;
+                        cout << endl;
+                        if (withMoney3 > 0)
+                        {
+                            c1.withDraw(withMoney3);
+                            cout << "Would you like cheak your balance press y/n :- ";
+                            cin >> me;
+                            if (me == "y")
+                            {
+                                c1.getBalance();
+                            }
+                            else if (me == "n")
+                            {
+                                cout << "Thank you for banking with us..." << endl;
+                            }
+                            else
+                            {
+                                cout << "press only y/n..." << endl;
+                            }
+                        }
+                        break;
+                    case 3:
+                    cout << "----your balance----" << endl
+                    << endl;
+                    c1.getBalance();
+                    cout << "Thank you..." << endl
+                    << endl;
                     break;
-
-                case 2:
-                    cout << " Note :- your overdaft limit is 1000" << endl;
-                  cout << "Enter amount for withdraw: ";
-                    cin >> amount;
-                    double blnc = c1.withdraw(amount);
-                    cout << "your balance is successfully withdraw." << endl;
+                    case 4:
+                        cout << "----account detail----" << endl
+                             << endl;
+                        c1.displayAccountInfo();
+                        cout << "Thank you..." << endl
+                             << endl;
+                        break;
+                case 5:
+                    cout << "----overdraft-limit----" << endl
+                         << endl;
+                    c1.checkOverDarft();
                     break;
-
-                case 3:
-                    c1.checkBalance();
-                    break;
-
-                case 4:
-                    c1.displayAccountInfo();
-                    break;
-
-                case 0:
-                    cout << "Exiting the Current Account system." << endl;
-                    break;
-
                 default:
-                    cout << "Invalid choice! Please try again." << endl;
+                    cout << "Enter valid choice..." << endl
+                         << endl;
+                    break;
                 }
             } while (choice1 != 0);
+
             break;
         case 3:
-            cout << "You have selected Fixed Deposit Account." << endl;
-            int choice2;
+        cout << "You have selected Fixed Deposit Account." << endl;
+        cout << "Enter account holder name: ";
+        cin >> name;
+        cout << "Enter account number: ";
+        cin >> accountNum;
+        f1.get(name, accountNum);
+        cout <<"Congratulations! Your Fixed Deposit account has been created successfully." << endl;
+        int choice2;
             do
             {
-                cout << "------ Bank Menu ------" << endl;
-                cout << "1. Deposit" << endl;
-                cout << "2. Withdraw" << endl;
-                cout << "3. Check Balance" << endl;
-                cout << "4. Account Information" << endl;
-                cout << "5. interest on fixed deposit account."<< endl;
-                cout << "0. Exit" << endl;
-                cout << "Enter your choice: ";
-                cin >> choice2;
+                cout << "----fixed-diposite_account----" << endl;
+                     cout << "1. Deposit" << endl;
+                     cout << "2. Withdraw" << endl;
+                     cout << "3. Check Balance" << endl;
+                     cout << "4. Account Information" << endl;
+                     cout << "5. interest on fixed deposit account."<< endl;
+                     cout << "0. Exit" << endl;
+                     cout << "Enter your choice: ";
+                     cin >> choice2;
 
-                double amount;
                 switch (choice2)
                 {
-                case 1:
-                    cout << "Enter deposit amount: ";
-                    cin >> amount;
-                    f1.deposit(amount);
+                    case 1:
+                        double money1;
+                        cout << "----Deposite----" << endl
+                             << endl;
+                        cout << "Deposite Your Money :- ";
+                        cin >> money1;
+                        if (money1 > 0)
+                        {
+                            f1.deposite(money1);
+                            cout << "Money diposite successfully..." << endl
+                                 << endl;
+                            cout << "Would you like cheak your balance press y/n :- ";
+                            cin >> me;
+                            cout << endl;
+                            if (me == "y")
+                            {
+                                f1.getBalance();
+                            }
+                            else if (me == "n")
+                            {
+                                cout << "Thank you for banking with us..." << endl;
+                            }
+                            else
+                            {
+                                cout << "press only y/n..." << endl;
+                            }
+                        }
+                        else
+                        {
+                            cout << "can't enter minus value" << endl;
+                        }
+                        break;
+                    case 2:
+                        double withMoney1;
+                        cout << "----withdrow----" << endl
+                             << endl;
+                        cout << "Enter amount to withdraw :- ";
+                        cin >> withMoney1;
+                        cout << endl;
+                        if (withMoney1 > 0)
+                        {
+                            f1.withdraw(withMoney1);
+                            cout << "Would you like cheak your balance press y/n :- ";
+                            cin >> me;
+                            if (me == "y")
+                            {
+                                f1.getBalance();
+                            }
+                            else if (me == "n")
+                            {
+                                cout << "Thank you for banking with us..." << endl;
+                            }
+                            else
+                            {
+                                cout << "press only y/n..." << endl;
+                            }
+                        }
+                        break;
+                    case 3:
+                    cout << "----your balance----" << endl
+                    << endl;
+                    f1.getBalance();
+                    cout << "Thank you..." << endl
+                    << endl;
                     break;
-
-                case 2:
-                    cout << "Enter withdrawal amount: ";
-                    cin >> amount;
-                    f1.withdraw(amount);
-                    break;
-
-                case 3:
-                    f1.checkBalance();
-                    break;
-
-                case 4:
-                    f1.displayAccountInfo();
-                    break;
-                case 5 :
-                    f1.calculateInterest();
+                    case 4:
+                        cout << "----account detail----" << endl
+                             << endl;
+                        f1.displayAccountInfo();
+                        cout << "Thank you..." << endl
+                             << endl;
+                        break;
+                case 5:
+                    int t, u;
+                    cout << "----FD----" << endl;
+                    cout << "Welcome to fixed-diposite department..." << endl;
+                    cout << "Note :- if your fd term is less than or equal 6 month then the interst rate are calculate on simple intrest-rate if your fd is above 6 month then the intrest rate are calculate on compunding intrest-rate...." << endl;
+                    cout << "Note :- we are calucate interst per month and our intrest-rate are 1(%) per month" << endl;
+                    cout << "Deposite Your Principle Amount for FD :- ";
+                    cin >> u;
+                    cout << endl;
+                    cout << "Enter your term(in month) here :- ";
+                    cin >> t;
+                    f1.calculateIntrest(t, u);
+                    cout << "Thank you..." << endl
+                         << endl;
                     break;
                 case 0:
-                    cout << "Exiting the Fixed Deposit Account system." << endl;
+                    cout << "Thank you..." << endl
+                         << endl;
                     break;
 
                 default:
-                    cout << "Invalid choice! Please try again." << endl;
+                    cout << "Enter valid choice..." <<endl<<endl;
+                    break;
                 }
-            } while (choice2 != 0);
-            break;
-        case 0:
-            cout << "Exiting the Bank system...." << endl;
-            break;
-        default:
-            cout << "Invalid choice! Please try again." << endl;
-        }
-    } while (type != 0);
 
- 
+            } while (choice2 != 0);
+
+            break;
+
+        default:
+            break;
+        }
+
+    } while (type > 0);
 
     return 0;
 }
